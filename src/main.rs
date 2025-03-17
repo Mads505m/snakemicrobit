@@ -20,17 +20,17 @@ fn handle_connection(mut stream: TcpStream) {
     let request_line = buf_reader.lines().next().unwrap().unwrap();
 
     let (status_line, filename, content_type) = if request_line.starts_with("GET / ") {
-        ("HTTP/1.1 200 OK", "../snake/src/views/html/home.html", "text/html")
+        ("HTTP/1.1 200 OK", "../snakemicrobit/src/views/html/home.html", "text/html")
     } else if request_line.starts_with("GET /header.html") {
-        ("HTTP/1.1 200 OK", "../snake/src/views/partials/header.html", "text/html")
+        ("HTTP/1.1 200 OK", "../snakemicrobit/src/views/partials/header.html", "text/html")
     } else if request_line.starts_with("GET /css/header.css") {
-        ("HTTP/1.1 200 OK", "../snake/src/public/css/header.css", "text/css")
+        ("HTTP/1.1 200 OK", "../snakemicrobit/src/public/css/header.css", "text/css")
     } else if request_line.starts_with("GET /css/home.css") {
-        ("HTTP/1.1 200 OK", "../snake/src/public/css/home.css", "text/css")
+        ("HTTP/1.1 200 OK", "../snakemicrobit/src/public/css/home.css", "text/css")
     } else if request_line.starts_with("GET /images/snakeheader.png") {
-        ("HTTP/1.1 200 OK", "../snake/src/public/images/snakeheader.png", "image/png")
+        ("HTTP/1.1 200 OK", "../snakemicrobit/src/public/images/snakeheader.png", "image/png")
     } else {
-        ("HTTP/1.1 404 NOT FOUND", "../snake/src/views/html/404.html", "text/html")
+        ("HTTP/1.1 404 NOT FOUND", "../snakemicrobit/src/views/html/404.html", "text/html")
     };
 
     let path = Path::new(filename);
