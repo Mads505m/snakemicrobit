@@ -1,8 +1,9 @@
 body {
     font-family: 'Poppins', sans-serif;
 }
+
 header {
-    background-color: darkseagreen;
+    background-color: #1E1E2E;
     padding: 15px 0;
     position: fixed;
     top: 0;
@@ -10,18 +11,20 @@ header {
     right: 0;
     width: 100%;
     z-index: 100;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
+
 nav {
     display: flex;
     align-items: center;
 }
+
 nav ul {
+    position: relative;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -29,16 +32,16 @@ nav ul {
     gap: 20px;
     justify-content: center;
 }
+
 nav ul li {
     color: white;
     font-size: 18px;
     font-weight: bold;
     cursor: pointer;
+    position: relative;
     transition: color 0.3s ease;
 }
-nav ul li:hover {
-    color: lime;
-}
+
 .logo {
     height: 25px;
     width: auto;
@@ -51,4 +54,22 @@ nav ul li:hover {
 
 .logo:last-child {
     margin-right: 20px;
+}
+
+nav ul li::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 0;
+    height: 4px;
+    background-color: white;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: width 0.3s ease, transform 0.3s ease;
+}
+
+nav ul li:hover::after {
+    width: 100%;
+    transform: scaleX(1);
 }

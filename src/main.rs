@@ -23,13 +23,23 @@ fn handle_connection(mut stream: TcpStream) {
         ("HTTP/1.1 200 OK", "../snakemicrobit/src/views/html/home.html", "text/html")
     } else if request_line.starts_with("GET /header.html") {
         ("HTTP/1.1 200 OK", "../snakemicrobit/src/views/partials/header.html", "text/html")
+    } else if request_line.starts_with("GET /footer.html") {
+        ("HTTP/1.1 200 OK", "../snakemicrobit/src/views/partials/footer.html", "text/html")
     } else if request_line.starts_with("GET /css/header.css") {
         ("HTTP/1.1 200 OK", "../snakemicrobit/src/public/css/header.css", "text/css")
-    } else if request_line.starts_with("GET /css/home.css") {
+    }  else if request_line.starts_with("GET /css/footer.css") {
+        ("HTTP/1.1 200 OK", "../snakemicrobit/src/public/css/footer.css", "text/css")
+    }  else if request_line.starts_with("GET /css/home.css") {
         ("HTTP/1.1 200 OK", "../snakemicrobit/src/public/css/home.css", "text/css")
     } else if request_line.starts_with("GET /images/snakeheader.png") {
         ("HTTP/1.1 200 OK", "../snakemicrobit/src/public/images/snakeheader.png", "image/png")
-    } else {
+    } else if request_line.starts_with("GET /images/background.png") {
+        ("HTTP/1.1 200 OK", "../snakemicrobit/src/public/images/background.png", "image/png")
+    } else if request_line.starts_with("GET /images/Cover.png") {
+        ("HTTP/1.1 200 OK", "../snakemicrobit/src/public/images/Cover.png", "image/png")
+    } else if request_line.starts_with("GET /images/placeholder.png") {
+        ("HTTP/1.1 200 OK", "../snakemicrobit/src/public/images/placeholder.png", "image/png")
+    }else {
         ("HTTP/1.1 404 NOT FOUND", "../snakemicrobit/src/views/html/404.html", "text/html")
     };
 
