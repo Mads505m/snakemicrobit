@@ -1,6 +1,18 @@
 [package]
-name = "snake"
+name = "micro"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "hostserver"
+path = "src/hostserver.rs"
+
 [dependencies]
+cortex-m = "0.7.7"
+cortex-m-rt = "0.7.5"
+microbit-v2 = "0.15.1"
+embedded-hal = "1.0.0"
+heapless = "0.8.0"
+panic-halt = "1.0.0"
+
+tiny-led-matrix = "1.0.2"
