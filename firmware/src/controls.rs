@@ -8,7 +8,6 @@ use crate::game::Turn;
 static GPIO: Mutex<RefCell<Option<Gpiote>>> = Mutex::new(RefCell::new(None));
 static TURN: Mutex<RefCell<Turn>> = Mutex::new(RefCell::new(Turn::None));
 
-/// Initialize buttons A and B with falling-edge interrupts.
 pub(crate) fn init_buttons(board_gpiote: GPIOTE, board_buttons: Buttons) {
     let gpiote = Gpiote::new(board_gpiote);
 

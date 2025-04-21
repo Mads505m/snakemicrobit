@@ -1,0 +1,23 @@
+[package]
+name = "host"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+tokio-tungstenite = "0.20"
+tokio-serial = "5"
+warp = "0.3"
+futures-util = "0.3"
+probe-rs = "0.14.2"
+probe-rs-rtt = "0.14.2"
+
+
+
+[[bin]]
+name = "bridge"
+path = "src/bridge.rs"
+
+[[bin]]
+name = "hostserver"
+path = "src/hostserver.rs"

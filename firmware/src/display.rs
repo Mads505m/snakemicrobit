@@ -7,7 +7,6 @@ use tiny_led_matrix::Render;
 
 static DISPLAY: Mutex<RefCell<Option<Display<TIMER1>>>> = Mutex::new(RefCell::new(None));
 
-/// Initialize the non-blocking display (uses TIMER1 for refresh).
 pub(crate) fn init_display(board_timer: TIMER1, board_display: DisplayPins) {
     let display = Display::new(board_timer, board_display);
     free(move |cs| {
@@ -16,7 +15,6 @@ pub(crate) fn init_display(board_timer: TIMER1, board_display: DisplayPins) {
     unsafe { pac::NVIC::unmask(pac::Interrupt::TIMER1); }
 }
 
-/// Show an image (implementing the `Render` trait) on the LED matrix.
 pub(crate) fn display_image(image: &impl Render) {
     free(|cs| {
         if let Some(display) = DISPLAY.borrow(cs).borrow_mut().as_mut() {
@@ -25,7 +23,6 @@ pub(crate) fn display_image(image: &impl Render) {
     })
 }
 
-/// Clear the LED matrix (turn off all LEDs).
 pub(crate) fn clear_display() {
     free(|cs| {
         if let Some(display) = DISPLAY.borrow(cs).borrow_mut().as_mut() {
@@ -33,8 +30,6 @@ pub(crate) fn clear_display() {
         }
     })
 }
-
-/// Interrupt handler for TIMER1 - drives the display refresh.
 #[interrupt]
 fn TIMER1() {
     free(|cs| {

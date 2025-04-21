@@ -1,10 +1,6 @@
-use std::{
-    fs,
-    io::{prelude::*, BufReader},
-    net::{TcpListener, TcpStream},
-    path::Path,
-    process::Command,
-};
+
+
+use std::{fs, io::{prelude::*, BufReader}, net::{TcpListener, TcpStream}, path::Path, process::Command, thread};
 
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
@@ -31,22 +27,30 @@ fn handle_connection(mut stream: TcpStream) {
     println!("📥 Incoming request: {}", request_line);
 
 
-    if request_line.starts_with("GET /flash") {
-        let _ = Command::new("cargo")
-            .args(&[
-                "embed",
-                "--target", "thumbv7em-none-eabihf",
-                "--bin", "micro",
-            ])
-            .output();
+ /*   if request_line.starts_with("GET /flash") {
+        thread::spawn(|| {
+            let _ = Command::new("cargo")
+                .args(&[
+                    "embed",
+                    "-p", "firmware",
+                    "--target", "thumbv7em-none-eabihf",
+                    "--bin", "micro",
+                ])
+                .output();
+        });
 
+        // Immediately send a response back to the client
         let response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
         stream.write_all(response.as_bytes()).unwrap();
         return;
     }
 
+  */
 
-    // Serve files
+
+
+
+
     let (status_line, filename, content_type) = if request_line.starts_with("GET / ") {
         ("HTTP/1.1 200 OK", "../snakemicrobit/src/views/html/home.html", "text/html")
     } else if request_line.starts_with("GET /header.html") {
@@ -65,7 +69,11 @@ fn handle_connection(mut stream: TcpStream) {
         ("HTTP/1.1 200 OK", "../snakemicrobit/src/public/images/background.png", "image/png")
     } else if request_line.starts_with("GET /images/Cover.png") {
         ("HTTP/1.1 200 OK", "../snakemicrobit/src/public/images/Cover.png", "image/png")
-    } else if request_line.starts_with("GET /images/placeholder.png") {
+    }else if request_line.starts_with("GET /sim.html") {
+        ("HTTP/1.1 200 OK", "../snakemicrobit/src/views/html/sim.html", "text/html")
+    } else if request_line.starts_with("GET /firmware.html") {
+        ("HTTP/1.1 200 OK", "../snakemicrobit/src/views/html/firmware.html", "text/html") }
+    else if request_line.starts_with("GET /images/placeholder.png") {
         ("HTTP/1.1 200 OK", "../snakemicrobit/src/public/images/placeholder.png", "image/png")
     } else {
         ("HTTP/1.1 404 NOT FOUND", "../micro/src/views/html/404.html", "text/html")

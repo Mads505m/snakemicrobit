@@ -2,13 +2,11 @@ use heapless::{FnvIndexSet, spsc::Queue};
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 struct Coords {
-    // A single point on the 5x5 grid
     row: i8,
     col: i8,
 }
 
 impl Coords {
-    /// Get random coordinates within the grid, excluding any in the given set.
     fn random(rng: &mut Prng, exclude: Option<&FnvIndexSet<Coords, 32>>) -> Self {
         let mut coords = Coords {
             row: ((rng.random_u32() as usize) % 5) as i8,
@@ -23,13 +21,11 @@ impl Coords {
         coords
     }
 
-    /// Check if the point lies outside the grid boundaries.
     fn is_out_of_bounds(&self) -> bool {
         self.row < 0 || self.row >= 5 || self.col < 0 || self.col >= 5
     }
 }
 
-/// A basic 32-bit pseudo-random number generator (xorshift).
 struct Prng {
     value: u32
 }
@@ -44,14 +40,12 @@ impl Prng {
         input ^= input << 5;
         input
     }
-    /// Get a new pseudo-random `u32`.
     fn random_u32(&mut self) -> u32 {
         self.value = Self::xorshift32(self.value);
         self.value
     }
 }
 
-/// Possible movement directions for the snake.
 enum Direction {
     Up,
     Down,
@@ -59,7 +53,6 @@ enum Direction {
     Right
 }
 
-/// Possible turn commands (from button input).
 #[derive(Debug, Copy, Clone)]
 pub enum Turn {
     Left,
@@ -74,15 +67,13 @@ pub enum GameStatus {
     Ongoing
 }
 
-/// Outcome of a single movement step.
 enum StepOutcome {
-    Full(Coords),      // Snake filled the grid (win)
-    Collision(Coords), // Snake hit itself (lose)
-    Eat(Coords),       // Snake ate food (grow)
-    Move(Coords)       // Normal move
+    Full(Coords),
+    Collision(Coords),
+    Eat(Coords),
+    Move(Coords)
 }
 
-/// Snake state: head position, body positions, occupied set, and current direction.
 struct Snake {
     head: Coords,
     tail: Queue<Coords, 32>,
@@ -107,7 +98,6 @@ impl Snake {
         }
     }
 
-    /// Move the snake's head to `coords`. If `extend` is false, remove the last tail segment.
     fn move_snake(&mut self, coords: Coords, extend: bool) {
         // current head becomes part of the tail
         self.tail.enqueue(self.head).unwrap();
@@ -146,7 +136,6 @@ impl Snake {
     }
 }
 
-/// Holds the game state and logic.
 pub(crate) struct Game {
     rng: Prng,
     snake: Snake,
@@ -171,7 +160,6 @@ impl Game {
         }
     }
 
-    /// Reset game state to start a new game.
     pub(crate) fn reset(&mut self) {
         self.snake = Snake::new();
         self.place_food();
@@ -180,14 +168,12 @@ impl Game {
         self.score = 0;
     }
 
-    /// Randomly place food on an empty tile.
     fn place_food(&mut self) -> Coords {
         let coords = Coords::random(&mut self.rng, Some(&self.snake.coord_set));
         self.food_coords = coords;
         coords
     }
 
-    /// Wrap around coordinates that go off the grid edges.
     fn wraparound(&self, coords: Coords) -> Coords {
         if coords.row < 0 {
             Coords { row: 4, ..coords }
@@ -200,7 +186,6 @@ impl Game {
         }
     }
 
-    /// Determine the snake's next head position (without moving it yet).
     fn get_next_move(&self) -> Coords {
         let head = &self.snake.head;
         let next = match self.snake.direction {
@@ -216,11 +201,9 @@ impl Game {
         }
     }
 
-    /// Evaluate what will happen if the snake moves (but don't update state yet).
     fn get_step_outcome(&self) -> StepOutcome {
         let next = self.get_next_move();
         if self.snake.coord_set.contains(&next) {
-            // If next position is the tail’s end, it will move, so no collision
             if next != *self.snake.tail.peek().unwrap() {
                 StepOutcome::Collision(next)
             } else {
@@ -237,7 +220,6 @@ impl Game {
         }
     }
 
-    /// Update the game state based on the outcome of a move.
     fn handle_step_outcome(&mut self, outcome: StepOutcome) {
         self.status = match outcome {
             StepOutcome::Collision(_) => GameStatus::Lost,
@@ -258,21 +240,17 @@ impl Game {
         }
     }
 
-    /// Advance the game by one step: turn the snake, then move and update state.
     pub(crate) fn step(&mut self, turn: Turn) {
         self.snake.turn(turn);
         let outcome = self.get_step_outcome();
         self.handle_step_outcome(outcome);
     }
 
-    /// Compute the delay (ms) between steps based on the current speed/score.
     pub(crate) fn step_len_ms(&self) -> u32 {
         let result = 1000 - 200 * ((self.speed as i32) - 1);
         if result < 200 { 200 } else { result as u32 }
     }
 
-    /// Produce a 5x5 brightness matrix representing the game field.
-    /// Brightness values range 0–9 for head, tail, and food.
     pub(crate) fn game_matrix(
         &self,
         head_brightness: u8,
@@ -291,7 +269,6 @@ impl Game {
         values
     }
 
-    /// Produce a 5x5 matrix showing the score (number of LEDs lit equals score).
     pub(crate) fn score_matrix(&self) -> [[u8; 5]; 5] {
         let mut values = [[0u8; 5]; 5];
         let full_rows = (self.score as usize) / 5;

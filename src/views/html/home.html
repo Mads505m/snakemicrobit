@@ -28,7 +28,8 @@
             <h2>Snake</h2>
             <p>Et klassisk arkadespil, hvor du styrer en slange, der vokser, når den spiser frugt. Undgå at ramme væggene eller dig selv! Spillet bliver sværere, jo længere du overlever.</p>
             <div class="card-buttons">
-                <button  class="btn-simulation" onclick="window.location.href='/flash'">Sim</button>
+                <button class="btn-simulation" onclick="flashAndView()">Sim</button>
+
                 <button class="btn-guide">Guide</button>
             </div>
         </div>
@@ -190,6 +191,40 @@
 <div id="footer-container"></div>
 
 <script>
+    fetch('/header.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('header-container').innerHTML = data;
+        })
+        .catch(error => console.error('Error loading header:', error));
+
+    fetch('/footer.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('footer-container').innerHTML = data;
+        })
+        .catch(error => console.error('Error loading footer:', error));
+</script>
+<script>
+    function flashAndView() {
+        const simButton = document.querySelector('.btn-simulation');
+        simButton.disabled = true;
+        simButton.textContent = "⚡ Flasher...";
+
+        fetch('/flash')
+            .then(() => {
+                simButton.textContent = "✅ Klar, åbner sim!";
+                setTimeout(() => {
+                    window.location.href = '/sim.html';
+                }, 3000); // 3 sekunders forsinkelse
+            })
+            .catch(err => {
+                simButton.textContent = "❌ Flash fejlede!";
+                console.error(err);
+            });
+    }
+
+    // Indlæs header og footer (som du allerede havde)
     fetch('/header.html')
         .then(response => response.text())
         .then(data => {
