@@ -10,20 +10,19 @@
             grid-template-columns: repeat(5, 30px);
             gap: 4px;
         }
-        .cell {
+     /*   .cell {
             width: 30px;
             height: 30px;
             background-color: black;
             border-radius: 4px;
         }
+
+      */
     </style>
 </head>
 <body>
 <h2>Live Microbit Display</h2>
 <div class="grid" id="grid"></div>
-
-<!-- Sim Button -->
-<button class="btn-simulation" onclick="simulate()">Sim</button>
 
 <script>
     // Create the grid with 25 cells
@@ -51,32 +50,26 @@
 
     // When a message is received from WebSocket
     socket.onmessage = (e) => {
-        console.log("📥 Raw Data from WebSocket:", e.data);
+        console.log("Raw Data from WebSocket:", e.data);
 
         // Clean the data by removing non-printable characters
         const cleanedData = e.data.trim().replace(/[^\x20-\x7E]/g, '');  // Remove non-ASCII characters
-        console.log("📥 Cleaned Data:", cleanedData);
+        console.log("Cleaned Data:", cleanedData);
 
-        // Convert cleaned data into an array of numbers (e.g., '0000000' -> [0, 0, 0, 0, 0, 0, 0])
+        // Convert cleaned data into an array of numbers
         const data = cleanedData.split('').map(Number);
 
         // Ensure the data has 25 digits
         if (data.length === 25) {
             const cells = grid.children;
             for (let i = 0; i < 25; i++) {
-                const val = data[i] || 0; // Default to 0 if undefined
-                cells[i].style.backgroundColor = `rgba(0,255,0,${val / 9})`;  // Green color with varying opacity
+                const val = data[i] || 0;
+                cells[i].style.backgroundColor = `rgba(0,255,0,${val / 9})`;
             }
         } else {
-            console.log("⚠️ Unexpected data format. Expected 25 digits.");
+            console.log("Unexpected data format. Expected 25 digits.");
         }
     };
-
-    // Simulate Button Clicked
-    function simulate() {
-        console.log("Sim button clicked!");
-        // You can add further actions here when the Sim button is clicked
-    }
 </script>
 
 </body>

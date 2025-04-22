@@ -25,7 +25,7 @@ use crate::game::{Game, GameStatus};
 
 #[entry]
 fn main() -> ! {
-    rtt_init_print!(); // ✅ Setup RTT over USB
+    rtt_init_print!(); //Setup RTT over USB
     let mut board = Board::take().unwrap();
     let mut timer = Timer::new(board.TIMER0).into_periodic();
     let mut rng = Rng::new(board.RNG);
@@ -37,7 +37,7 @@ fn main() -> ! {
     loop {
         let matrix = game.game_matrix(6, 3, 9);
 
-        // ✅ Send matrix to browser/terminal via RTT
+        // Send matrix to browser/terminal via RTT
         for row in &matrix {
             for &val in row {
                 rprint!("{}", val); // send as flat 25-char string
@@ -45,7 +45,7 @@ fn main() -> ! {
         }
         rprintln!(""); // newline
 
-        // Also display on micro:bit
+        // display on micro:bit
         let image = GreyscaleImage::new(&matrix);
         display_image(&image);
         timer.delay_ms(game.step_len_ms());

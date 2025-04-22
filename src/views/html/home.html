@@ -213,13 +213,13 @@
 
         fetch('/flash')
             .then(() => {
-                simButton.textContent = "✅ Klar, åbner sim!";
+                simButton.textContent = "Klar, åbner sim!";
                 setTimeout(() => {
                     window.location.href = '/sim.html';
                 }, 3000); // 3 sekunders forsinkelse
             })
             .catch(err => {
-                simButton.textContent = "❌ Flash fejlede!";
+                simButton.textContent = "Flash fejlede!";
                 console.error(err);
             });
     }

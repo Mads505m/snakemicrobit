@@ -264,7 +264,7 @@ impl Game {
         for t in &self.snake.tail {
             values[t.row as usize][t.col as usize] = tail_brightness;
         }
-        // Food
+        // Apple
         values[self.food_coords.row as usize][self.food_coords.col as usize] = food_brightness;
         values
     }

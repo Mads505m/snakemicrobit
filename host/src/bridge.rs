@@ -29,26 +29,26 @@ async fn main() {
             })
     };
 
-    // 🔄 RTT reader thread
+    // RTT reader thread
     thread::spawn(move || {
-        // 1️⃣ Find and open the first connected debug probe
+        // find and open the first connected debug probe
         let probe_info = Probe::list_all().get(0)
-            .expect("❌ No probe found")
+            .expect("No probe found")
             .clone();
-        let probe = probe_info.open().expect("❌ Failed to open probe");
+        let probe = probe_info.open().expect("Failed to open probe");
 
-        // 2️⃣ Attach to nRF52 target (micro:bit v2 = nrf52833_xxAA) with appropriate permissions
+        // Attach to nRF52 target (micro:bit v2 = nrf52833_xxAA) with appropriate permissions
         let target = "nrf52833_xxAA";
-        let permissions = Permissions::default(); // Set to READ_WRITE for memory read and write permissions
-        let mut session = probe.attach(target, permissions).expect("❌ Failed to attach");
+        let permissions = Permissions::default();
+        let mut session = probe.attach(target, permissions).expect("Failed to attach");
 
-        // 3️⃣ Extract the memory map first
-        let memory_map = session.target().memory_map.clone(); // Clone memory_map before mutable borrow of core
+        // Extract the memory map first
+        let memory_map = session.target().memory_map.clone();
 
-        // 4️⃣ Now borrow `core` mutably
-        let mut core = session.core(0).expect("❌ Failed to get core");
+        // 4️Now borrow `core` mutably
+        let mut core = session.core(0).expect("Failed to get core");
 
-        // 5️⃣ Attach RTT
+        // Attach RTT
         let mut rtt = loop {
             match Rtt::attach(&mut core, &memory_map) {
                 Ok(rtt) => break rtt,
@@ -58,7 +58,7 @@ async fn main() {
             }
         };
 
-        // 6️⃣ Read from the first RTT up-channel
+        // Read from the first RTT up-channel
         let mut up = rtt.up_channels().take(0).unwrap();
         let mut buf = [0u8; 64];
 
@@ -74,6 +74,6 @@ async fn main() {
         }
     });
 
-    println!("📡 WebSocket kører på ws://localhost:3030/ws");
+    println!("WebSocket kører på ws://localhost:3030/ws");
     warp::serve(ws_route).run(([127, 0, 0, 1], 3030)).await;
 }

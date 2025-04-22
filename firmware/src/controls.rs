@@ -32,7 +32,7 @@ pub(crate) fn init_buttons(board_gpiote: GPIOTE, board_buttons: Buttons) {
     });
 }
 
-/// Interrupt handler for GPIOTE events (button presses).
+// Interrupt handler for GPIOTE events (button presses).
 #[interrupt]
 fn GPIOTE() {
     free(|cs| {
@@ -53,8 +53,8 @@ fn GPIOTE() {
     });
 }
 
-/// Get the next turn direction (from the most recent button press).
-/// If `reset` is true, consume the turn (reset to None).
+// Get the next turn direction (from the most recent button press).
+// If `reset` is true, consume the turn (reset to None).
 pub fn get_turn(reset: bool) -> Turn {
     free(|cs| {
         let turn = *TURN.borrow(cs).borrow();

@@ -19,12 +19,12 @@ fn handle_connection(mut stream: TcpStream) {
     let request_line = match maybe_request_line {
         Some(Ok(line)) => line,
         _ => {
-            eprintln!("⚠️  Client disconnected or sent invalid request.");
+            eprintln!("Client disconnected or sent invalid request.");
             return;
         }
     };
 
-    println!("📥 Incoming request: {}", request_line);
+    println!("Incoming request: {}", request_line);
 
 
  /*   if request_line.starts_with("GET /flash") {
