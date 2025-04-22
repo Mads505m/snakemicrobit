@@ -46,7 +46,7 @@ async fn main() {
         let memory_map = session.target().memory_map.clone();
 
         // 4️Now borrow `core` mutably
-        let mut core = session.core(0).expect("Failed to get core");
+        let mut core = session.core(0).expect(" Failed to get core");
 
         // Attach RTT
         let mut rtt = loop {
