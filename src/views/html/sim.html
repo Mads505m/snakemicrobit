@@ -37,15 +37,15 @@
     const socket = new WebSocket('ws://localhost:3030/ws');
 
     socket.onopen = () => {
-        console.log("📡 WebSocket connection established.");
+        console.log("WebSocket connection established.");
     };
 
     socket.onerror = (error) => {
-        console.error("📡 WebSocket error:", error);
+        console.error("WebSocket error:", error);
     };
 
     socket.onclose = (event) => {
-        console.log("📡 WebSocket connection closed", event);
+        console.log("WebSocket connection closed", event);
     };
 
     // When a message is received from WebSocket
